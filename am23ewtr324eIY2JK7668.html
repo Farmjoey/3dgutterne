@@ -374,15 +374,12 @@
         let discountCodes = [];
         let giftCards = [];
 
-        // Load discount codes from localStorage
+        // --- DISCOUNT CODES ---
+
         async function loadDiscountCodes() {
             try {
-                const local = localStorage.getItem('discountCodes');
-                if (local) {
-                    discountCodes = JSON.parse(local);
-                } else {
-                    discountCodes = [];
-                }
+                const res = await fetch('/api/discount-codes');
+                discountCodes = await res.json();
             } catch (error) {
                 console.error('Error loading discount codes:', error);
                 discountCodes = [];
@@ -390,26 +387,67 @@
             renderDiscountCodes();
         }
 
-        // Save discount codes to localStorage
-        async function saveDiscountCodes() {
+        async function createDiscountCode(code, percentage) {
             try {
-                localStorage.setItem('discountCodes', JSON.stringify(discountCodes));
-                console.log('Discount codes saved:', JSON.stringify(discountCodes, null, 2));
+                const res = await fetch('/api/discount-codes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, percentage })
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    showAlert(data.error || 'Error creating discount code', 'error');
+                    return false;
+                }
+                const newDiscount = await res.json();
+                discountCodes.push(newDiscount);
+                renderDiscountCodes();
+                showAlert(`Discount code "${code}" created successfully!`);
+                return true;
             } catch (error) {
-                console.error('Error saving discount codes:', error);
-                showAlert('Error saving discount codes', 'error');
+                showAlert('Error creating discount code', 'error');
+                return false;
             }
         }
 
-        // Load gift cards from localStorage
+        async function deleteDiscountCode(id) {
+            try {
+                const res = await fetch(`/api/discount-codes/${id}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    showAlert('Error deleting discount code', 'error');
+                    return;
+                }
+                discountCodes = discountCodes.filter(dc => dc.id !== id);
+                renderDiscountCodes();
+                showAlert('Discount code deleted successfully!');
+            } catch (error) {
+                showAlert('Error deleting discount code', 'error');
+            }
+        }
+
+        async function toggleDiscountCode(id) {
+            try {
+                const res = await fetch(`/api/discount-codes/${id}/toggle`, { method: 'PATCH' });
+                if (!res.ok) {
+                    showAlert('Error toggling discount code', 'error');
+                    return;
+                }
+                const updated = await res.json();
+                const idx = discountCodes.findIndex(dc => dc.id === id);
+                if (idx > -1) discountCodes[idx] = updated;
+                renderDiscountCodes();
+                showAlert(`Discount code "${updated.code}" ${updated.active ? 'activated' : 'deactivated'}!`);
+            } catch (error) {
+                showAlert('Error toggling discount code', 'error');
+            }
+        }
+
+        // --- GIFT CARDS ---
+
         async function loadGiftCards() {
             try {
-                const local = localStorage.getItem('giftCards');
-                if (local) {
-                    giftCards = JSON.parse(local);
-                } else {
-                    giftCards = [];
-                }
+                const res = await fetch('/api/gift-cards');
+                giftCards = await res.json();
             } catch (error) {
                 console.error('Error loading gift cards:', error);
                 giftCards = [];
@@ -417,14 +455,119 @@
             renderGiftCards();
         }
 
-        // Save gift cards to localStorage
-        async function saveGiftCards() {
+        async function createGiftCard(code, amount) {
             try {
-                localStorage.setItem('giftCards', JSON.stringify(giftCards));
-                console.log('Gift cards saved:', JSON.stringify(giftCards, null, 2));
+                const res = await fetch('/api/gift-cards', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, amount })
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    showAlert(data.error || 'Error creating gift card', 'error');
+                    return false;
+                }
+                const newGift = await res.json();
+                giftCards.push(newGift);
+                renderGiftCards();
+                showAlert(`Gift card "${code}" created successfully!`);
+                return true;
             } catch (error) {
-                console.error('Error saving gift cards:', error);
-                showAlert('Error saving gift cards', 'error');
+                showAlert('Error creating gift card', 'error');
+                return false;
+            }
+        }
+
+        async function deleteGiftCard(id) {
+            try {
+                const res = await fetch(`/api/gift-cards/${id}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    showAlert('Error deleting gift card', 'error');
+                    return;
+                }
+                giftCards = giftCards.filter(gc => gc.id !== id);
+                renderGiftCards();
+                showAlert('Gift card deleted successfully!');
+            } catch (error) {
+                showAlert('Error deleting gift card', 'error');
+            }
+        }
+
+        async function toggleGiftCard(id) {
+            try {
+                const res = await fetch(`/api/gift-cards/${id}/toggle`, { method: 'PATCH' });
+                if (!res.ok) {
+                    showAlert('Error toggling gift card', 'error');
+                    return;
+                }
+                const updated = await res.json();
+                const idx = giftCards.findIndex(gc => gc.id === id);
+                if (idx > -1) giftCards[idx] = updated;
+                renderGiftCards();
+                showAlert(`Gift card "${updated.code}" ${updated.active ? 'activated' : 'deactivated'}!`);
+            } catch (error) {
+                showAlert('Error toggling gift card', 'error');
+            }
+        }
+
+        async function addMoneyGiftCard(id) {
+            const gift = giftCards.find(gc => gc.id === id);
+            if (!gift) return;
+            const input = prompt('How much money do you want to add? (kr)', '0');
+            if (input === null) return;
+            const addAmount = parseFloat(input);
+            if (isNaN(addAmount) || addAmount <= 0) {
+                showAlert('Please enter a valid amount greater than 0', 'error');
+                return;
+            }
+            try {
+                const res = await fetch(`/api/gift-cards/${id}/add`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: addAmount })
+                });
+                if (!res.ok) {
+                    showAlert('Error adding money to gift card', 'error');
+                    return;
+                }
+                const updated = await res.json();
+                const idx = giftCards.findIndex(gc => gc.id === id);
+                if (idx > -1) giftCards[idx] = updated;
+                renderGiftCards();
+                showAlert(`Added kr ${addAmount} to gift card "${gift.code}"!`);
+            } catch (error) {
+                showAlert('Error adding money to gift card', 'error');
+            }
+        }
+
+        async function removeMoneyGiftCard(id) {
+            const gift = giftCards.find(gc => gc.id === id);
+            if (!gift) return;
+            const input = prompt('How much money do you want to remove? (kr)', '0');
+            if (input === null) return;
+            const removeAmount = parseFloat(input);
+            if (isNaN(removeAmount) || removeAmount <= 0) {
+                showAlert('Please enter a valid amount greater than 0', 'error');
+                return;
+            }
+            try {
+                const res = await fetch(`/api/gift-cards/${id}/remove`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: removeAmount })
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    showAlert(data.error || 'Error removing money from gift card', 'error');
+                    return;
+                }
+                const updated = await res.json();
+                const idx = giftCards.findIndex(gc => gc.id === id);
+                if (idx > -1) giftCards[idx] = updated;
+                renderGiftCards();
+                showAlert(`Removed kr ${removeAmount} from gift card "${gift.code}"!`);
+            } catch (error) {
+                showAlert('Error removing money from gift card', 'error');
             }
         }
 
@@ -448,53 +591,6 @@
         // Generate unique ID
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
-
-        // Create discount code
-        function createDiscountCode(code, percentage) {
-            const existingCode = discountCodes.find(dc => dc.code.toLowerCase() === code.toLowerCase());
-            if (existingCode) {
-                showAlert('Discount code already exists!', 'error');
-                return false;
-            }
-
-            const newDiscount = {
-                id: generateId(),
-                code: code.toUpperCase(),
-                percentage: parseInt(percentage),
-                active: true,
-                created: new Date().toISOString(),
-                used: 0
-            };
-
-            discountCodes.push(newDiscount);
-            saveDiscountCodes();
-            renderDiscountCodes();
-            showAlert(`Discount code "${code}" created successfully!`);
-            return true;
-        }
-
-        // Delete discount code
-        function deleteDiscountCode(id) {
-            const codeIndex = discountCodes.findIndex(dc => dc.id === id);
-            if (codeIndex > -1) {
-                const deletedCode = discountCodes[codeIndex];
-                discountCodes.splice(codeIndex, 1);
-                saveDiscountCodes();
-                renderDiscountCodes();
-                showAlert(`Discount code "${deletedCode.code}" deleted successfully!`);
-            }
-        }
-
-        // Toggle discount code status
-        function toggleDiscountCode(id) {
-            const discount = discountCodes.find(dc => dc.id === id);
-            if (discount) {
-                discount.active = !discount.active;
-                saveDiscountCodes();
-                renderDiscountCodes();
-                showAlert(`Discount code "${discount.code}" ${discount.active ? 'activated' : 'deactivated'}!`);
-            }
         }
 
         // Render discount codes
@@ -670,45 +766,6 @@
         function generateGiftCardId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
-        function createGiftCard(code, amount) {
-            const existing = giftCards.find(gc => gc.code.toLowerCase() === code.toLowerCase());
-            if (existing) {
-                showAlert('Gift card code already exists!', 'error');
-                return false;
-            }
-            const newGift = {
-                id: generateGiftCardId(),
-                code: code.toUpperCase(),
-                amount: parseFloat(amount),
-                active: true,
-                created: new Date().toISOString(),
-                used: 0
-            };
-            giftCards.push(newGift);
-            saveGiftCards();
-            renderGiftCards();
-            showAlert(`Gift card "${code}" created successfully!`);
-            return true;
-        }
-        function deleteGiftCard(id) {
-            const idx = giftCards.findIndex(gc => gc.id === id);
-            if (idx > -1) {
-                const deleted = giftCards[idx];
-                giftCards.splice(idx, 1);
-                saveGiftCards();
-                renderGiftCards();
-                showAlert(`Gift card "${deleted.code}" deleted successfully!`);
-            }
-        }
-        function toggleGiftCard(id) {
-            const gift = giftCards.find(gc => gc.id === id);
-            if (gift) {
-                gift.active = !gift.active;
-                saveGiftCards();
-                renderGiftCards();
-                showAlert(`Gift card "${gift.code}" ${gift.active ? 'activated' : 'deactivated'}!`);
-            }
-        }
         function confirmDeleteGiftCard(id, code) {
             if (confirm(`Are you sure you want to delete the gift card "${code}"?`)) {
                 deleteGiftCard(id);
@@ -735,42 +792,6 @@
                 document.getElementById('giftcard-amount').value = '';
             }
         });
-        // Add money to gift card
-        function addMoneyGiftCard(id) {
-            const gift = giftCards.find(gc => gc.id === id);
-            if (!gift) return;
-            const input = prompt('How much money do you want to add? (kr)', '0');
-            if (input === null) return;
-            const addAmount = parseFloat(input);
-            if (isNaN(addAmount) || addAmount <= 0) {
-                showAlert('Please enter a valid amount greater than 0', 'error');
-                return;
-            }
-            gift.amount += addAmount;
-            saveGiftCards();
-            renderGiftCards();
-            showAlert(`Added kr ${addAmount} to gift card "${gift.code}"!`);
-        }
-        // Remove money from gift card
-        function removeMoneyGiftCard(id) {
-            const gift = giftCards.find(gc => gc.id === id);
-            if (!gift) return;
-            const input = prompt('How much money do you want to remove? (kr)', '0');
-            if (input === null) return;
-            const removeAmount = parseFloat(input);
-            if (isNaN(removeAmount) || removeAmount <= 0) {
-                showAlert('Please enter a valid amount greater than 0', 'error');
-                return;
-            }
-            if (gift.amount - removeAmount < 0) {
-                showAlert('Cannot remove more than the current amount!', 'error');
-                return;
-            }
-            gift.amount -= removeAmount;
-            saveGiftCards();
-            renderGiftCards();
-            showAlert(`Removed kr ${removeAmount} from gift card "${gift.code}"!`);
-        }
     </script>
 </body>
 </html>

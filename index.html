@@ -756,10 +756,10 @@
             }
             resultDiv.innerHTML = '<div class="loading-text">Checking...</div>';
             try {
-                // Load discount codes and gift cards from local JSON files
+                // Load discount codes and gift cards from API endpoints
                 const [discountRes, giftRes] = await Promise.all([
-                    fetch('am4567UHIUT4j3uyodfihgjJIKBHGGK786UHIGHgyuid54697UHIY.json'),
-                    fetch('amgc45yerHiy6RTKNL6HiofghhjJIKGIK7987456KJHBI67869KJGH546o.json')
+                    fetch('/api/discount-codes'),
+                    fetch('/api/gift-cards')
                 ]);
                 const discounts = await discountRes.json();
                 const gifts = await giftRes.json();
