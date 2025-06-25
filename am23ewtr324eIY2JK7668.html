@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3DGUTTERNE - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 22px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+            letter-spacing: -0.015em;
+        }
+
+        .header p {
+            font-size: 21px;
+            color: #86868b;
+            font-weight: 400;
+        }
+
+        .admin-section {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 24px;
+            letter-spacing: -0.015em;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 17px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 17px;
+            border: 2px solid #d2d2d7;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1d1d1f;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0071e3;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 17px;
+            border: 2px solid #d2d2d7;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1d1d1f;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #0071e3;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 17px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background: #0071e3;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #0057b8;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #ff3b30;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background: #d70015;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f2f2f7;
+            color: #1d1d1f;
+            border: 1px solid #d2d2d7;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8ed;
+            transform: translateY(-1px);
+        }
+
+        .discount-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .discount-card {
+            background: #f2f2f7;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #d2d2d7;
+            transition: all 0.3s ease;
+        }
+
+        .discount-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .discount-code {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .discount-percentage {
+            font-size: 28px;
+            font-weight: 700;
+            color: #30d158;
+            margin-bottom: 12px;
+        }
+
+        .discount-status {
+            font-size: 15px;
+            color: #86868b;
+            margin-bottom: 16px;
+        }
+
+        .status-active {
+            color: #30d158;
+            font-weight: 500;
+        }
+
+        .status-inactive {
+            color: #ff9500;
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 17px;
+        }
+
+        .alert-success {
+            background: #d1e7dd;
+            color: #0a3622;
+            border: 1px solid #30d158;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #ff3b30;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #86868b;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #0071e3;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 32px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #0057b8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .admin-section {
+                padding: 24px;
+            }
+            
+            .discount-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="pin-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:#f5f5f7;display:flex;align-items:center;justify-content:center;">
+        <form id="pin-form" style="background:#fff;padding:40px 32px;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.08);display:flex;flex-direction:column;align-items:center;gap:18px;min-width:320px;">
+            <h2 style="font-size:28px;font-weight:600;color:#1d1d1f;margin-bottom:8px;">Admin PIN</h2>
+            <input type="password" id="pin-input" class="form-input" placeholder="Enter PIN" style="text-align:center;font-size:21px;letter-spacing:6px;" required maxlength="12" autocomplete="off">
+            <button type="submit" class="btn btn-primary" style="width:100%;">Unlock</button>
+            <div id="pin-error" style="color:#ff3b30;font-size:15px;display:none;">Incorrect PIN. Try again.</div>
+        </form>
+    </div>
+    <div class="container">
+        <a href="index.html" class="back-link">
+            ← Back to Main Site
+        </a>
+        <div class="header">
+            <h1>Admin Panel</h1>
+            <p>Manage discount codes and gift cards for 3DGUTTERNE</p>
+        </div>
+        <div id="alert-container"></div>
+        <!-- Tab Navigation -->
+        <div style="display: flex; gap: 16px; margin-bottom: 32px;">
+            <button id="tab-discount" class="btn btn-primary" style="min-width: 160px;">Discount Codes</button>
+            <button id="tab-giftcard" class="btn btn-secondary" style="min-width: 160px;">Gift Cards</button>
+        </div>
+        <!-- Discount Codes Section -->
+        <div id="discount-section">
+            <div class="admin-section">
+                <h2 class="section-title">Create New Discount Code</h2>
+                <form id="discount-form">
+                    <div class="form-group">
+                        <label for="discount-code" class="form-label">Discount Code</label>
+                        <input type="text" id="discount-code" class="form-input" placeholder="Enter discount code (e.g., SAVE20)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="discount-percentage" class="form-label">Discount Percentage</label>
+                        <select id="discount-percentage" class="form-select" required>
+                            <option value="">Select discount percentage</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25">25%</option>
+                            <option value="30">30%</option>
+                            <option value="35">35%</option>
+                            <option value="40">40%</option>
+                            <option value="45">45%</option>
+                            <option value="50">50%</option>
+                            <option value="55">55%</option>
+                            <option value="60">60%</option>
+                            <option value="65">65%</option>
+                            <option value="70">70%</option>
+                            <option value="75">75%</option>
+                            <option value="80">80%</option>
+                            <option value="85">85%</option>
+                            <option value="90">90%</option>
+                            <option value="95">95%</option>
+                            <option value="100">100%</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Discount Code</button>
+                </form>
+            </div>
+            <div class="admin-section">
+                <h2 class="section-title">Existing Discount Codes</h2>
+                <div id="discount-codes-container">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎫</div>
+                        <p>Loading discount codes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Gift Cards Section (hidden by default) -->
+        <div id="giftcard-section" style="display:none;">
+            <div class="admin-section">
+                <h2 class="section-title">Create New Gift Card</h2>
+                <form id="giftcard-form">
+                    <div class="form-group">
+                        <label for="giftcard-code" class="form-label">Gift Card Code</label>
+                        <input type="text" id="giftcard-code" class="form-input" placeholder="Enter gift card code (e.g., GIFT100)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="giftcard-amount" class="form-label">Gift Card Amount (kr)</label>
+                        <input type="number" id="giftcard-amount" class="form-input" placeholder="Enter amount (e.g., 100)" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Gift Card</button>
+                </form>
+            </div>
+            <div class="admin-section">
+                <h2 class="section-title">Existing Gift Cards</h2>
+                <div id="giftcard-cards-container">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎁</div>
+                        <p>No gift cards created yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let discountCodes = [];
+        let giftCards = [];
+
+        // Load discount codes from localStorage
+        async function loadDiscountCodes() {
+            try {
+                const local = localStorage.getItem('discountCodes');
+                if (local) {
+                    discountCodes = JSON.parse(local);
+                } else {
+                    discountCodes = [];
+                }
+            } catch (error) {
+                console.error('Error loading discount codes:', error);
+                discountCodes = [];
+            }
+            renderDiscountCodes();
+        }
+
+        // Save discount codes to localStorage
+        async function saveDiscountCodes() {
+            try {
+                localStorage.setItem('discountCodes', JSON.stringify(discountCodes));
+                console.log('Discount codes saved:', JSON.stringify(discountCodes, null, 2));
+            } catch (error) {
+                console.error('Error saving discount codes:', error);
+                showAlert('Error saving discount codes', 'error');
+            }
+        }
+
+        // Load gift cards from localStorage
+        async function loadGiftCards() {
+            try {
+                const local = localStorage.getItem('giftCards');
+                if (local) {
+                    giftCards = JSON.parse(local);
+                } else {
+                    giftCards = [];
+                }
+            } catch (error) {
+                console.error('Error loading gift cards:', error);
+                giftCards = [];
+            }
+            renderGiftCards();
+        }
+
+        // Save gift cards to localStorage
+        async function saveGiftCards() {
+            try {
+                localStorage.setItem('giftCards', JSON.stringify(giftCards));
+                console.log('Gift cards saved:', JSON.stringify(giftCards, null, 2));
+            } catch (error) {
+                console.error('Error saving gift cards:', error);
+                showAlert('Error saving gift cards', 'error');
+            }
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alert-container');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Generate unique ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Create discount code
+        function createDiscountCode(code, percentage) {
+            const existingCode = discountCodes.find(dc => dc.code.toLowerCase() === code.toLowerCase());
+            if (existingCode) {
+                showAlert('Discount code already exists!', 'error');
+                return false;
+            }
+
+            const newDiscount = {
+                id: generateId(),
+                code: code.toUpperCase(),
+                percentage: parseInt(percentage),
+                active: true,
+                created: new Date().toISOString(),
+                used: 0
+            };
+
+            discountCodes.push(newDiscount);
+            saveDiscountCodes();
+            renderDiscountCodes();
+            showAlert(`Discount code "${code}" created successfully!`);
+            return true;
+        }
+
+        // Delete discount code
+        function deleteDiscountCode(id) {
+            const codeIndex = discountCodes.findIndex(dc => dc.id === id);
+            if (codeIndex > -1) {
+                const deletedCode = discountCodes[codeIndex];
+                discountCodes.splice(codeIndex, 1);
+                saveDiscountCodes();
+                renderDiscountCodes();
+                showAlert(`Discount code "${deletedCode.code}" deleted successfully!`);
+            }
+        }
+
+        // Toggle discount code status
+        function toggleDiscountCode(id) {
+            const discount = discountCodes.find(dc => dc.id === id);
+            if (discount) {
+                discount.active = !discount.active;
+                saveDiscountCodes();
+                renderDiscountCodes();
+                showAlert(`Discount code "${discount.code}" ${discount.active ? 'activated' : 'deactivated'}!`);
+            }
+        }
+
+        // Render discount codes
+        function renderDiscountCodes() {
+            const container = document.getElementById('discount-codes-container');
+            
+            if (discountCodes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎫</div>
+                        <p>No discount codes created yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="discount-grid">
+                    ${discountCodes.map(discount => `
+                        <div class="discount-card">
+                            <div class="discount-code">${discount.code}</div>
+                            <div class="discount-percentage">${discount.percentage}% OFF</div>
+                            <div class="discount-status">
+                                Status: <span class="${discount.active ? 'status-active' : 'status-inactive'}">
+                                    ${discount.active ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
+                            <div class="discount-status">
+                                Created: ${new Date(discount.created).toLocaleDateString()}
+                            </div>
+                            <div style="margin-top: 16px;">
+                                <button class="btn btn-secondary" onclick="toggleDiscountCode('${discount.id}')">
+                                    ${discount.active ? 'Deactivate' : 'Activate'}
+                                </button>
+                                <button class="btn btn-danger" onclick="confirmDelete('${discount.id}', '${discount.code}')">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Confirm delete
+        function confirmDelete(id, code) {
+            if (confirm(`Are you sure you want to delete the discount code "${code}"?`)) {
+                deleteDiscountCode(id);
+            }
+        }
+
+        // Form submission
+        document.getElementById('discount-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('discount-code').value.trim();
+            const percentage = document.getElementById('discount-percentage').value;
+            
+            if (!code || !percentage) {
+                showAlert('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (code.length < 3) {
+                showAlert('Discount code must be at least 3 characters long', 'error');
+                return;
+            }
+
+            if (createDiscountCode(code, percentage)) {
+                // Reset form
+                document.getElementById('discount-code').value = '';
+                document.getElementById('discount-percentage').value = '';
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDiscountCodes();
+            loadGiftCards();
+        });
+
+        // Export function for external use
+        window.getDiscountCodes = function() {
+            return discountCodes;
+        };
+
+        // Export function to validate discount code
+        window.validateDiscountCode = function(code) {
+            const discount = discountCodes.find(dc => 
+                dc.code.toLowerCase() === code.toLowerCase() && dc.active
+            );
+            return discount ? { valid: true, percentage: discount.percentage } : { valid: false };
+        };
+
+        // PIN protection
+        const PIN = "220512";
+        const pinOverlay = document.getElementById('pin-overlay');
+        const pinForm = document.getElementById('pin-form');
+        const pinInput = document.getElementById('pin-input');
+        const pinError = document.getElementById('pin-error');
+        document.body.style.overflow = 'hidden';
+        pinForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (pinInput.value === PIN) {
+                pinOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            } else {
+                pinError.style.display = 'block';
+                pinInput.value = '';
+                pinInput.focus();
+            }
+        });
+        pinInput.addEventListener('input', function() {
+            pinError.style.display = 'none';
+        });
+
+        // Tab logic
+        const tabDiscount = document.getElementById('tab-discount');
+        const tabGiftcard = document.getElementById('tab-giftcard');
+        const discountSection = document.getElementById('discount-section');
+        const giftcardSection = document.getElementById('giftcard-section');
+        tabDiscount.addEventListener('click', function() {
+            tabDiscount.classList.add('btn-primary');
+            tabDiscount.classList.remove('btn-secondary');
+            tabGiftcard.classList.remove('btn-primary');
+            tabGiftcard.classList.add('btn-secondary');
+            discountSection.style.display = '';
+            giftcardSection.style.display = 'none';
+        });
+        tabGiftcard.addEventListener('click', function() {
+            tabGiftcard.classList.add('btn-primary');
+            tabGiftcard.classList.remove('btn-secondary');
+            tabDiscount.classList.remove('btn-primary');
+            tabDiscount.classList.add('btn-secondary');
+            discountSection.style.display = 'none';
+            giftcardSection.style.display = '';
+        });
+
+        // Gift card logic (frontend only)
+        function renderGiftCards() {
+            const container = document.getElementById('giftcard-cards-container');
+            if (giftCards.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎁</div><p>No gift cards created yet</p></div>`;
+                return;
+            }
+            container.innerHTML = `<div class="discount-grid">${giftCards.map(gift => `
+                <div class="discount-card">
+                    <div class="discount-code">${gift.code}</div>
+                    <div class="discount-percentage">kr <span id="gift-amount-${gift.id}">${gift.amount}</span></div>
+                    <div style="margin-bottom: 12px;">
+                        <button class="btn btn-secondary" onclick="addMoneyGiftCard('${gift.id}')">+ Add</button>
+                        <button class="btn btn-secondary" onclick="removeMoneyGiftCard('${gift.id}')">− Remove</button>
+                    </div>
+                    <div class="discount-status">
+                        Status: <span class="${gift.active ? 'status-active' : 'status-inactive'}">
+                            ${gift.active ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div class="discount-status">
+                        Created: ${new Date(gift.created).toLocaleDateString()}
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn btn-secondary" onclick="toggleGiftCard('${gift.id}')">
+                            ${gift.active ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button class="btn btn-danger" onclick="confirmDeleteGiftCard('${gift.id}', '${gift.code}')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('')}</div>`;
+        }
+        function generateGiftCardId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        function createGiftCard(code, amount) {
+            const existing = giftCards.find(gc => gc.code.toLowerCase() === code.toLowerCase());
+            if (existing) {
+                showAlert('Gift card code already exists!', 'error');
+                return false;
+            }
+            const newGift = {
+                id: generateGiftCardId(),
+                code: code.toUpperCase(),
+                amount: parseFloat(amount),
+                active: true,
+                created: new Date().toISOString(),
+                used: 0
+            };
+            giftCards.push(newGift);
+            saveGiftCards();
+            renderGiftCards();
+            showAlert(`Gift card "${code}" created successfully!`);
+            return true;
+        }
+        function deleteGiftCard(id) {
+            const idx = giftCards.findIndex(gc => gc.id === id);
+            if (idx > -1) {
+                const deleted = giftCards[idx];
+                giftCards.splice(idx, 1);
+                saveGiftCards();
+                renderGiftCards();
+                showAlert(`Gift card "${deleted.code}" deleted successfully!`);
+            }
+        }
+        function toggleGiftCard(id) {
+            const gift = giftCards.find(gc => gc.id === id);
+            if (gift) {
+                gift.active = !gift.active;
+                saveGiftCards();
+                renderGiftCards();
+                showAlert(`Gift card "${gift.code}" ${gift.active ? 'activated' : 'deactivated'}!`);
+            }
+        }
+        function confirmDeleteGiftCard(id, code) {
+            if (confirm(`Are you sure you want to delete the gift card "${code}"?`)) {
+                deleteGiftCard(id);
+            }
+        }
+        document.getElementById('giftcard-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const code = document.getElementById('giftcard-code').value.trim();
+            const amount = document.getElementById('giftcard-amount').value;
+            if (!code || !amount) {
+                showAlert('Please fill in all fields', 'error');
+                return;
+            }
+            if (code.length < 3) {
+                showAlert('Gift card code must be at least 3 characters long', 'error');
+                return;
+            }
+            if (parseFloat(amount) <= 0) {
+                showAlert('Gift card amount must be greater than 0', 'error');
+                return;
+            }
+            if (createGiftCard(code, amount)) {
+                document.getElementById('giftcard-code').value = '';
+                document.getElementById('giftcard-amount').value = '';
+            }
+        });
+        // Add money to gift card
+        function addMoneyGiftCard(id) {
+            const gift = giftCards.find(gc => gc.id === id);
+            if (!gift) return;
+            const input = prompt('How much money do you want to add? (kr)', '0');
+            if (input === null) return;
+            const addAmount = parseFloat(input);
+            if (isNaN(addAmount) || addAmount <= 0) {
+                showAlert('Please enter a valid amount greater than 0', 'error');
+                return;
+            }
+            gift.amount += addAmount;
+            saveGiftCards();
+            renderGiftCards();
+            showAlert(`Added kr ${addAmount} to gift card "${gift.code}"!`);
+        }
+        // Remove money from gift card
+        function removeMoneyGiftCard(id) {
+            const gift = giftCards.find(gc => gc.id === id);
+            if (!gift) return;
+            const input = prompt('How much money do you want to remove? (kr)', '0');
+            if (input === null) return;
+            const removeAmount = parseFloat(input);
+            if (isNaN(removeAmount) || removeAmount <= 0) {
+                showAlert('Please enter a valid amount greater than 0', 'error');
+                return;
+            }
+            if (gift.amount - removeAmount < 0) {
+                showAlert('Cannot remove more than the current amount!', 'error');
+                return;
+            }
+            gift.amount -= removeAmount;
+            saveGiftCards();
+            renderGiftCards();
+            showAlert(`Removed kr ${removeAmount} from gift card "${gift.code}"!`);
+        }
+    </script>
+</body>
+</html>

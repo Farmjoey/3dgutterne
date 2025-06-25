@@ -427,6 +427,112 @@
             outline: 2px solid #0071e3;
             outline-offset: 2px;
         }
+
+        /* Apple-style tab buttons */
+        .apple-tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .apple-tab-btn {
+            min-width: 160px;
+            padding: 12px 28px;
+            font-size: 17px;
+            font-weight: 500;
+            border: none;
+            border-radius: 12px;
+            background: #f2f2f7;
+            color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .apple-tab-btn.btn-primary {
+            background: #fff;
+            color: #0071e3;
+            box-shadow: 0 4px 16px rgba(0,113,227,0.08);
+            border: 2px solid #0071e3;
+            transform: translateY(-2px);
+        }
+        .apple-tab-btn.btn-secondary {
+            background: #f2f2f7;
+            color: #1d1d1f;
+            border: 2px solid #d2d2d7;
+        }
+        .apple-tab-btn:active {
+            transform: scale(0.98);
+        }
+        /* Apple-style check code panel */
+        #check-section .admin-section {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 40px 32px;
+        }
+        #check-section .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 24px;
+            letter-spacing: -0.015em;
+        }
+        #check-section .form-group {
+            margin-bottom: 24px;
+        }
+        #check-section .form-label {
+            font-size: 17px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+        #check-section .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 17px;
+            border: 2px solid #d2d2d7;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1d1d1f;
+            transition: border-color 0.3s ease;
+        }
+        #check-section .form-input:focus {
+            outline: none;
+            border-color: #0071e3;
+        }
+        #check-section .btn {
+            background: #0071e3;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 500;
+            padding: 12px 24px;
+            border: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+        #check-section .btn:hover {
+            background: #0057b8;
+            transform: translateY(-1px);
+        }
+        #check-section .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+        #check-section .alert-success {
+            background: #d1e7dd;
+            color: #0a3622;
+            border: 1px solid #30d158;
+        }
+        #check-section .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #ff3b30;
+        }
     </style>
 </head>
 <body>
@@ -434,7 +540,7 @@
     <nav class="nav">
         <div class="nav-content">
             <a href="#" class="logo">3DGUTTERNE</a>
-            <a href="https://www.tiktok.com/@3dgutterne" target="_blank" class="tiktok-link">
+            <a href="https://www.tiktok.com/@3dgutterne1" target="_blank" class="tiktok-link">
                 <svg class="tiktok-icon" viewBox="0 0 24 24">
                     <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.10z"/>
                 </svg>
@@ -442,12 +548,23 @@
             </a>
         </div>
     </nav>
-
+    <!-- Check Code Tab -->
+    <div class="container" style="margin-top: 24px;">
+        <div class="apple-tabs">
+            <button id="tab-main" class="apple-tab-btn btn-primary">🛒 Shop</button>
+            <button id="tab-check" class="apple-tab-btn btn-secondary">🎫/🎁 Check Code</button>
+        </div>
+        <div id="main-section">
     <!-- Hero section -->
     <section class="hero">
         <div class="container">
             <h1>3D Printing.</h1>
-            <p>Reimagined.</p>
+                     <p>If you want custom orders just text us "custom".</p>
+          <p>For normal order just say the name of the item.</p>
+          <br>
+<p>
+  Follow <a href="https://www.twitch.tv/panda_gangtwich">Panda_GangTwich</a>
+          </p>
         </div>
     </section>
 
@@ -456,8 +573,10 @@
         <div class="container">
             <div class="contact-card">
                 <h2 class="contact-title">Ready to Order?</h2>
-                <p class="contact-subtitle">Text us to discuss your 3D printing needs and place your order</p>
-                <span class="contact-phone-large">+45 60 55 91 63</span>
+                <p class="contact-subtitle">Text us to discuss your 3D printing needs and place your order</p><p class="contact-subtitle">
+              We are a private selling webshop. <br> <br> You can return a item into 14 days and if something is broken from the start you have 2 years to send it back.<br> <br>there is a tournament in fjgame.glitch.me whare you can win a 50kr giftcard.
+              </p>
+                <span class="contact-phone-large">3dcheckout@gmail.com</span>
             </div>
         </div>
     </section>
@@ -478,7 +597,22 @@
             </div>
         </div>
     </section>
-
+        </div>
+        <!-- Check Code Section (hidden by default) -->
+        <div id="check-section" style="display:none;">
+            <div class="admin-section" style="max-width: 500px; margin: 0 auto;">
+                <h2 class="section-title">Check Your Code</h2>
+                <form id="check-form">
+                    <div class="form-group">
+                        <label for="check-code" class="form-label">Enter your code</label>
+                        <input type="text" id="check-code" class="form-input" placeholder="Enter code" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Check</button>
+                </form>
+                <div id="check-result" style="margin-top: 24px;"></div>
+            </div>
+        </div>
+    </div>
     <script>
         async function loadItems() {
             const grid = document.getElementById('grid');
@@ -497,44 +631,7 @@
                 } catch (error) {
                     console.log('Using sample data:', error.message);
                     // Apple-style sample data
-                    items = [
-                        { 
-                            title: "Precision Pro Max", 
-                            price: 2999, 
-                            pic: null,
-                            description: "Professional-grade 3D printing with unmatched precision."
-                        },
-                        { 
-                            title: "Creative Studio", 
-                            price: 1499, 
-                            pic: null,
-                            description: "Perfect for artists and designers seeking perfection."
-                        },
-                        { 
-                            title: "Compact Essential", 
-                            price: 899, 
-                            pic: null,
-                            description: "Everything you need in a beautifully compact design."
-                        },
-                        { 
-                            title: "Industrial Ultra", 
-                            price: 4999, 
-                            pic: null,
-                            description: "Built for professionals who demand the absolute best."
-                        },
-                        { 
-                            title: "Educational Kit", 
-                            price: 599, 
-                            pic: null,
-                            description: "Learn and create with our most accessible printer."
-                        },
-                        { 
-                            title: "Advanced Series", 
-                            price: 1999, 
-                            pic: null,
-                            description: "Advanced features for the modern creator."
-                        }
-                    ];
+        
                 }
 
                 // Clear loading state
@@ -551,7 +648,7 @@
                            <div class="no-image" style="display:none;">${item.title.charAt(0)}</div>`
                         : `<div class="no-image">${item.title.charAt(0)}</div>`;
                     
-                    const description = item.description || "Experience the future of 3D printing technology.";
+                    const description = item.description || "";
                     const price = typeof item.price === 'number' ? item.price.toLocaleString() : item.price;
                     
                     productCard.innerHTML = `
@@ -563,7 +660,7 @@
                                 <span class="price-from">From</span>kr ${price}
                             </div>
                             <div class="contact-info">
-                                <span class="contact-phone">+45 60 55 91 63</span> to order
+                                <span class="contact-phone">3dcheckout@gmail.com</span> to order
                             </div>
                         </div>
                     `;
@@ -626,6 +723,59 @@
                 observer.observe(card);
             });
         }, 1000);
+
+        // Tab logic
+        const tabMain = document.getElementById('tab-main');
+        const tabCheck = document.getElementById('tab-check');
+        const mainSection = document.getElementById('main-section');
+        const checkSection = document.getElementById('check-section');
+        tabMain.addEventListener('click', function() {
+            tabMain.classList.add('btn-primary');
+            tabMain.classList.remove('btn-secondary');
+            tabCheck.classList.remove('btn-primary');
+            tabCheck.classList.add('btn-secondary');
+            mainSection.style.display = '';
+            checkSection.style.display = 'none';
+        });
+        tabCheck.addEventListener('click', function() {
+            tabCheck.classList.add('btn-primary');
+            tabCheck.classList.remove('btn-secondary');
+            tabMain.classList.remove('btn-primary');
+            tabMain.classList.add('btn-secondary');
+            mainSection.style.display = 'none';
+            checkSection.style.display = '';
+        });
+        // Check code logic
+        document.getElementById('check-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const code = document.getElementById('check-code').value.trim();
+            const resultDiv = document.getElementById('check-result');
+            if (!code) {
+                resultDiv.innerHTML = '<div class="alert alert-error">Please enter a code.</div>';
+                return;
+            }
+            resultDiv.innerHTML = '<div class="loading-text">Checking...</div>';
+            try {
+                // Load discount codes and gift cards from local JSON files
+                const [discountRes, giftRes] = await Promise.all([
+                    fetch('am4567UHIUT4j3uyodfihgjJIKBHGGK786UHIGHgyuid54697UHIY.json'),
+                    fetch('amgc45yerHiy6RTKNL6HiofghhjJIKGIK7987456KJHBI67869KJGH546o.json')
+                ]);
+                const discounts = await discountRes.json();
+                const gifts = await giftRes.json();
+                const discount = discounts.find(dc => dc.code.toLowerCase() === code.toLowerCase());
+                const gift = gifts.find(gc => gc.code.toLowerCase() === code.toLowerCase());
+                if (discount && discount.active) {
+                    resultDiv.innerHTML = `<div class="alert alert-success">Valid Discount Code!<br>Value: <b>${discount.percentage}% off</b></div>`;
+                } else if (gift && gift.active) {
+                    resultDiv.innerHTML = `<div class="alert alert-success">Valid Gift Card!<br>Value: <b>kr ${gift.amount}</b></div>`;
+                } else {
+                    resultDiv.innerHTML = '<div class="alert alert-error">Invalid or inactive code.</div>';
+                }
+            } catch (err) {
+                resultDiv.innerHTML = '<div class="alert alert-error">Error checking code. Please try again later.</div>';
+            }
+        });
     </script>
 </body>
 </html>
